@@ -10,25 +10,31 @@ Example:
 
 *Create*
 [https://us-central1-go-inventory.cloudfunctions.net/app/create-item](https://us-central1-go-inventory.cloudfunctions.net/app/create-item)
-body = JSON
- {
+
+```json
+{
 	"cod" : 5,
-	"nome" : "Solus",
+	"nome" : "EMPRESA",
 	"contato" : "Rafael",
 	"telefone" : "(43) 9999-9999"
+	
 }
+```
 
 *Read*
 [https://us-central1-go-inventory.cloudfunctions.net/app/read-item/9](https://us-central1-go-inventory.cloudfunctions.net/app/read-item/5)
 
 *Update*
 [https://us-central1-go-inventory.cloudfunctions.net/app/update-item/5](https://us-central1-go-inventory.cloudfunctions.net/app/update-item/5)
-body=JSON
- {
-	"nome" : "Updated Name",
-	"contato" : "Updated Contact",
+
+```json
+{
+	"nome" : "UPDATED",
+	"contato" : "UPDATED",
 	"telefone" : "(43) 9999-9999"
+	
 }
+```
 
 *Delete*
 [https://us-central1-go-inventory.cloudfunctions.net/app/delete-item/5](https://us-central1-go-inventory.cloudfunctions.net/app/delete-item/5)
