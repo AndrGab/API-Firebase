@@ -39,5 +39,8 @@ Example:
 *Delete*
 [https://us-central1-go-inventory.cloudfunctions.net/app/delete-item/5](https://us-central1-go-inventory.cloudfunctions.net/app/delete-item/5)
 
+*List All Data*
+[https://us-central1-go-inventory.cloudfunctions.net/app/read-itens](https://us-central1-go-inventory.cloudfunctions.net/app/read-itens)
+
 ---
 *Application based on Andrew Evan's [Article](https://indepth.dev/building-an-api-with-firebase/)*
