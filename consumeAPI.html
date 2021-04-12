@@ -1,0 +1,221 @@
+<HTML>
+    <!-- 
+    **
+    **   Enviando Request por Javascript/HTML 
+    **   Form's CSS --- w3schools.com
+    **   Consuming API with Pure Javascript/HTML
+    **
+    -->
+    <style type="text/css">
+    html *
+    {
+       font-family: Arial !important;
+    }
+    
+    p {
+    
+      text-align: center;
+      font-size: medium;
+      font-weight: bold;
+    
+    }
+    
+    label {
+    
+      font-size: medium;
+      font-weight: bold;
+    
+    }
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+    input[type=text], select {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    button[type=submit] {
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    button[type=submit]:hover {
+      background-color: #45a049;
+    }
+    
+    button[type=submit]:disabled {
+      background-color: #454746;
+    }
+    
+    
+    div {
+      border-radius: 5px;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    
+    
+    #contact {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    #contact td, #contact th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    
+    #contact tr:nth-child(even){background-color: #f2f2f2;}
+    
+    #contact tr:hover {background-color: #ddd;}
+    
+    #contact th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #4CAF50;
+      color: white;
+    }
+    </style>  
+    <body>
+    <div class="container">
+      <div id="AddCon">
+        <p>HTML/JAVASCRIPT - USING FIREBASE API</p>
+        <form id="form" action="#">
+          <label for="lname">Company</label>
+          <input type="text" id="lname" name="Company" placeholder="Company..." required>
+      
+          <label for="lcontact">Contact</label>
+          <input type="text" id="lcontact" name="Contact" placeholder="Contact..." required>
+      
+          <label for="lphone">Telephone</label>
+          <input type="text" id="lphone" name="Telephone" placeholder="Telephone..." required>
+      
+          <button id="lbut" type="submit" value="Submit">Add</button>
+        </form>
+    
+        <p id="table"></p>
+    
+      </div>
+    
+    </div>
+    
+    </body>
+    
+    <script>
+      MountTable ();
+      var httpRequest;
+      const form = document.getElementById('form');
+    
+      form.addEventListener('submit', AddContact);
+    
+      function AddContact(event) {
+        event.preventDefault();
+    
+        var code = Math.floor(Math.random() * 65536);
+        var company = document.getElementById('lname').value;
+        var contact = document.getElementById('lcontact').value;
+        var telephone = document.getElementById('lphone').value;
+        
+    
+        httpRequest = new XMLHttpRequest();
+    
+        if (!httpRequest) {
+          alert('Impossible to connect');
+          return false;
+        }
+        httpRequest.onreadystatechange = TreatResponse;
+        httpRequest.open('post', 'https://us-central1-go-inventory.cloudfunctions.net/app/create-item');
+        httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        httpRequest.send(JSON.stringify({"cod": code,"nome": company, "contato": contact, "telefone": telephone}
+    ));
+    
+      }
+    
+      function TreatResponse() {
+    
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) {
+            alert(httpRequest.responseText);
+            document.getElementById('form').reset();
+            MountTable();
+          } else {
+            alert('Database Error');
+    
+          }
+        }
+      }
+      
+    function MountTable() {
+    
+    httpRequestTable = new XMLHttpRequest();
+    
+    if (!httpRequestTable) {
+      alert('Impossible to connect');
+    return false;
+    }
+    
+    
+    httpRequestTable.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        myTab = JSON.parse(this.responseText);
+        txt = "<table id='contact'>"
+        txt += "<tr><th>Code</th><th>Company</th><th>Contact</th><th>Telephone</th><th>Action</th></tr>"
+        for (x in myTab) {
+          txt += "<tr><td>" + myTab[x].cod + "</td>";
+          txt += "<td>" + myTab[x].nome + "</td>";
+          txt += "<td>" + myTab[x].contato + "</td>";
+          txt += "<td>" + myTab[x].telefone + "</td>";
+          txt += "<td><a href='#' onclick='DeleteCon("+myTab[x].cod+");'>delete</a></td></tr>";
+        }
+        txt += "</table>"
+        document.getElementById("table").innerHTML = txt;
+      } 
+    }
+    httpRequestTable.open("GET", "https://us-central1-go-inventory.cloudfunctions.net/app/read-itens", true);
+    httpRequestTable.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    httpRequestTable.send();
+    
+      }
+    
+        
+    function DeleteCon(code) {
+    
+    
+    httpRequestDel = new XMLHttpRequest();
+    
+    if (!httpRequestDel) {
+      alert('Impossible to connect');
+    return false;
+    }
+    
+    
+    httpRequestDel.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        MountTable();
+        alert("Contact Deleted");
+      } 
+    }
+    httpRequestDel.open("DELETE", "https://us-central1-go-inventory.cloudfunctions.net/app/delete-item/"+code, true);
+    httpRequestDel.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    httpRequestDel.send();
+    
+      }
+      ;
+    </script>
+    </HTML>
